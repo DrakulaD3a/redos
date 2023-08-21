@@ -93,8 +93,29 @@ impl Writer {
         }
     }
 
+    /// Moves every character one line up
     fn new_line(&mut self) {
-        // TODO:
+        // We ommit the first row, because it is shifted off screen
+        for row in 1..BUFFER_HEIGHT {
+            for col in 0..BUFFER_WIDTH {
+                let character = self.buffer.chars[row][col].read();
+                self.buffer.chars[row - 1][col].write(character)
+            }
+        }
+        self.clean_row(BUFFER_HEIGHT - 1);
+        self.column_position = 0;
+    }
+
+    /// A method to write the row with spaces (so it appears empty)
+    fn clean_row(&mut self, row: usize) {
+        let blank = ScreenChar {
+            ascii_character: b' ',
+            color_code: self.color_code,
+        };
+
+        for col in 0..BUFFER_WIDTH {
+            self.buffer.chars[row][col].write(blank);
+        }
     }
 }
 
@@ -120,4 +141,5 @@ pub fn print_something() {
     writer.write_string("ello ");
     writer.write_string("Wörld!");
     write!(writer, "The numbers are {} and {}", 42, 1.0 / 3.0).unwrap();
+    write!(writer, "The numbers are {} \n {}", 42, 1.0 / 3.0).unwrap();
 }
