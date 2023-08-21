@@ -98,6 +98,14 @@ impl Writer {
     }
 }
 
+use core::fmt::{self, Write};
+impl fmt::Write for Writer {
+    fn write_str(&mut self, s: &str) -> fmt::Result {
+        self.write_string(s);
+        Ok(())
+    }
+}
+
 /// Just a test function
 pub fn print_something() {
     // Setting up the writer
@@ -111,4 +119,5 @@ pub fn print_something() {
     writer.write_byte(b'H');
     writer.write_string("ello ");
     writer.write_string("Wörld!");
+    write!(writer, "The numbers are {} and {}", 42, 1.0 / 3.0).unwrap();
 }
