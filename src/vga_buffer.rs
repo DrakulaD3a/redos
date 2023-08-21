@@ -27,8 +27,8 @@ struct ColorCode(u8);
 
 impl ColorCode {
     /// Creates a new `ColorCode` from two colors
-    fn new(foreground: Color, background: Color) -> ColorCode {
-        ColorCode((background as u8) << 4 | (foreground as u8))
+    const fn new(foreground: Color, background: Color) -> Self {
+        Self((background as u8) << 4 | (foreground as u8))
     }
 }
 
@@ -99,7 +99,7 @@ impl Writer {
         for row in 1..BUFFER_HEIGHT {
             for col in 0..BUFFER_WIDTH {
                 let character = self.buffer.chars[row][col].read();
-                self.buffer.chars[row - 1][col].write(character)
+                self.buffer.chars[row - 1][col].write(character);
             }
         }
         self.clean_row(BUFFER_HEIGHT - 1);
