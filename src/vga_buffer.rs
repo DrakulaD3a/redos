@@ -119,7 +119,7 @@ impl Writer {
     }
 }
 
-use core::fmt::{self, Write};
+use core::fmt;
 impl fmt::Write for Writer {
     fn write_str(&mut self, s: &str) -> fmt::Result {
         self.write_string(s);
@@ -127,19 +127,11 @@ impl fmt::Write for Writer {
     }
 }
 
-/// Just a test function
-pub fn print_something() {
-    // Setting up the writer
-    let mut writer = Writer {
+use spin::Mutex;
+lazy_static::lazy_static! {
+    pub static ref WRITER: Mutex<Writer> = Mutex::new(Writer {
         column_position: 0,
-        color_code: ColorCode::new(Color::Yellow, Color::Black),
-        // Creating the buffer at the address of VGA
+        color_code: ColorCode::new(Color::Red, Color::Black),
         buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
-    };
-
-    writer.write_byte(b'H');
-    writer.write_string("ello ");
-    writer.write_string("Wörld!");
-    write!(writer, "The numbers are {} and {}", 42, 1.0 / 3.0).unwrap();
-    write!(writer, "The numbers are {} \n {}", 42, 1.0 / 3.0).unwrap();
+    });
 }
