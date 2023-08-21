@@ -13,6 +13,7 @@ pub extern "C" fn _start() -> ! {
 
 /// This is the panic handler
 #[panic_handler]
-const fn panic(_info: &core::panic::PanicInfo) -> ! {
+fn panic(info: &core::panic::PanicInfo) -> ! {
+    println!("{info}");
     loop {}
 }
