@@ -12,4 +12,5 @@ panic = "abort"
 panic = "abort"
 
 [dependencies]
+# TODO: Maybe figure out how to upgrade to newer version
 bootloader = "0.9.23"
