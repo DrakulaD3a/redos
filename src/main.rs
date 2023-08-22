@@ -4,6 +4,7 @@
 #![test_runner(crate::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
+mod serial;
 mod vga_buffer;
 
 /// This is the entry point of our system
@@ -28,20 +29,20 @@ fn panic(info: &core::panic::PanicInfo) -> ! {
 /// A custom test runner
 #[cfg(test)]
 fn test_runner(tests: &[&dyn Fn()]) {
-    println!("Running {} tests", tests.len());
+    serial_println!("Running {} tests", tests.len());
     for test in tests {
         test();
     }
-    
+
     // Exit qemu after successful tests
     exit_qemu(QemuExitCode::Success);
 }
 
 #[test_case]
 fn basic_test() {
-    print!("trivial assertion... ");
+    serial_print!("trivial assertion... ");
     assert_eq!(1, 1);
-    println!("[ok]");
+    serial_println!("[ok]");
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
