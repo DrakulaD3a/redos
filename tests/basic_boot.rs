@@ -4,14 +4,15 @@
 #![test_runner(rudos::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
-#[no_mangle] // don't mangle the name of this function
+use rudos::println;
+
+#[no_mangle]
 pub extern "C" fn _start() -> ! {
     test_main();
 
     loop {}
 }
 
-/// Use the rudos' test runner
 #[panic_handler]
 fn panic(info: &core::panic::PanicInfo) -> ! {
     rudos::test_panic_handler(info)
@@ -19,5 +20,5 @@ fn panic(info: &core::panic::PanicInfo) -> ! {
 
 #[test_case]
 fn test_println() {
-    rudos::println!("test_println output");
+    println!("test_println output");
 }
