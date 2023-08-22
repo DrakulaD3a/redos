@@ -57,6 +57,7 @@ pub fn test_runner(tests: &[&dyn Testable]) {
 #[cfg(test)]
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
+    init();
     test_main();
     loop {}
 }
