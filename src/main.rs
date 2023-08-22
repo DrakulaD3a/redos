@@ -37,25 +37,34 @@ fn panic(info: &core::panic::PanicInfo) -> ! {
     loop {}
 }
 
+pub trait Testable {
+    fn run(&self) -> ();
+}
+
+impl<T> Testable for T
+where
+    T: Fn(),
+{
+    fn run(&self) {
+        serial_print!("{}...\t", core::any::type_name::<T>());
+        self();
+        serial_println!("[ok]");
+    }
+}
+
 /// A custom test runner
 #[cfg(test)]
-fn test_runner(tests: &[&dyn Fn()]) {
+fn test_runner(tests: &[&dyn Testable]) {
     serial_println!("Running {} tests", tests.len());
     for test in tests {
-        test();
+        test.run();
     }
 
     // Exit qemu after successful tests
     exit_qemu(QemuExitCode::Success);
 }
 
-#[test_case]
-fn basic_test() {
-    serial_print!("trivial assertion... ");
-    assert_eq!(1, 2);
-    serial_println!("[ok]");
-}
-
+/// Represents the qemu exit codes
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(u32)]
 pub enum QemuExitCode {
@@ -63,6 +72,7 @@ pub enum QemuExitCode {
     Failed = 0x11,
 }
 
+/// Exits qemu with specified exit code
 pub fn exit_qemu(exit_code: QemuExitCode) {
     use x86_64::instructions::port::Port;
 
