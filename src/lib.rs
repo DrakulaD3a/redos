@@ -3,9 +3,11 @@
 #![feature(custom_test_frameworks)]
 #![test_runner(crate::test_runner)]
 #![reexport_test_harness_main = "test_main"]
+#![feature(abi_x86_interrupt)]
 
 pub mod serial;
 pub mod vga_buffer;
+pub mod interrupts;
 
 pub trait Testable {
     fn run(&self);
@@ -71,4 +73,9 @@ pub fn test_panic_handler(info: &core::panic::PanicInfo) -> ! {
     serial_println!("Error: {}\n", info);
     exit_qemu(QemuExitCode::Failed);
     loop {}
+}
+
+/// All inicializations needed for the OS happen here
+pub fn init() {
+    interrupts::init_idt();
 }

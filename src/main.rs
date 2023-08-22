@@ -11,6 +11,8 @@ use rudos::println;
 pub extern "C" fn _start() -> ! {
     println!("Hello World{}", "!");
 
+    rudos::init();
+
     // We need to manually call this because we are in no_main project
     #[cfg(test)]
     test_main();
