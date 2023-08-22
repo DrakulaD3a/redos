@@ -136,11 +136,13 @@ lazy_static::lazy_static! {
     });
 }
 
+/// Prints to the VGA buffer
 #[macro_export]
 macro_rules! print {
     ($($arg:tt)*) => ($crate::vga_buffer::_print(format_args!($($arg)*)));
 }
 
+/// Prints to the VGA buffer, adding a newline at the end
 #[macro_export]
 macro_rules! println {
     () => ($crate::print!("\n"));
