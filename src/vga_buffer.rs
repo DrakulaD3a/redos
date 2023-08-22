@@ -154,3 +154,42 @@ pub fn _print(args: fmt::Arguments) {
     use core::fmt::Write;
     WRITER.lock().write_fmt(args).unwrap();
 }
+
+// Tests
+
+#[test_case]
+fn test_println_simple() {
+    println!("test_println_simple output");
+}
+
+#[test_case]
+fn test_printn_many() {
+    for _ in 0..200 {
+        println!("test_println_many output");
+    }
+}
+
+#[test_case]
+fn test_println_output() {
+    let s = "Some test string that fits on a single line";
+    println!("{s}");
+    for (i, c) in s.chars().enumerate() {
+        let screen_char = WRITER.lock().buffer.chars[BUFFER_HEIGHT - 2][i].read();
+        assert_eq!(char::from(screen_char.ascii_character), c);
+    }
+}
+
+#[test_case]
+fn test_println_long_output() {
+    let s =
+        "Some test string that can't possibly fit on a single line of screen space in VGA buffer";
+    println!("{s}");
+    for (i, c) in s.chars().enumerate() {
+        let screen_char = if i < BUFFER_WIDTH {
+            WRITER.lock().buffer.chars[BUFFER_HEIGHT - 3][i].read()
+        } else {
+            WRITER.lock().buffer.chars[BUFFER_HEIGHT - 2][i - BUFFER_WIDTH].read()
+        };
+        assert_eq!(char::from(screen_char.ascii_character), c);
+    }
+}
