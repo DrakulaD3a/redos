@@ -17,7 +17,7 @@ pub extern "C" fn _start() -> ! {
     #[cfg(test)]
     test_main();
 
-    loop {}
+    rudos::hlt_loop();
 }
 
 /// This is the panic handler
@@ -25,7 +25,7 @@ pub extern "C" fn _start() -> ! {
 #[panic_handler]
 fn panic(info: &core::panic::PanicInfo) -> ! {
     println!("{info}");
-    loop {}
+    rudos::hlt_loop();
 }
 
 #[cfg(test)]

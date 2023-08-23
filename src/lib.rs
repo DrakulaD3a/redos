@@ -43,6 +43,13 @@ pub fn exit_qemu(exit_code: QemuExitCode) {
     }
 }
 
+/// Infinitelly halts the cpu to save energy
+pub fn hlt_loop() -> ! {
+    loop {
+        x86_64::instructions::hlt();
+    }
+}
+
 /// A custom test runner
 pub fn test_runner(tests: &[&dyn Testable]) {
     serial_println!("Running {} tests", tests.len());
@@ -60,7 +67,7 @@ pub fn test_runner(tests: &[&dyn Testable]) {
 pub extern "C" fn _start() -> ! {
     init();
     test_main();
-    loop {}
+    hlt_loop();
 }
 
 /// This is the panic handler for tests
@@ -74,7 +81,7 @@ pub fn test_panic_handler(info: &core::panic::PanicInfo) -> ! {
     serial_println!("[failed]\n");
     serial_println!("Error: {}\n", info);
     exit_qemu(QemuExitCode::Failed);
-    loop {}
+    hlt_loop();
 }
 
 /// All inicializations needed for the OS happen here
