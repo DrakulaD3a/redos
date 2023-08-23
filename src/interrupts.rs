@@ -30,7 +30,7 @@ pub enum InterruptIndex {
 }
 
 impl InterruptIndex {
-    fn as_u8(self) -> u8 {
+    const fn as_u8(self) -> u8 {
         self as u8
     }
 

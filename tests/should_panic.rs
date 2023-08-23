@@ -1,7 +1,7 @@
 #![no_std]
 #![no_main]
 
-use rudos::{exit_qemu, serial_println, QemuExitCode};
+use rudos::{exit_qemu, serial_print, serial_println, QemuExitCode};
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
@@ -19,6 +19,6 @@ fn panic(_info: &core::panic::PanicInfo) -> ! {
 }
 
 fn should_fail() {
-    serial_println!("should_panic::should_fail...\t");
+    serial_print!("should_panic::should_fail...\t");
     assert_eq!(0, 1);
 }
