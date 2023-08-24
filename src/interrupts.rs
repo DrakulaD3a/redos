@@ -29,9 +29,9 @@ lazy_static::lazy_static! {
 #[derive(Debug, Clone, Copy)]
 #[repr(u8)]
 pub enum InterruptIndex {
-    // A timer interrupt is the first one
+    /// A timer interrupt is the first one
     Timer = PIC_1_OFFSET,
-    // A keyboard interrupt
+    /// A keyboard interrupt
     Keyboard,
 }
 
@@ -49,10 +49,12 @@ pub fn init_idt() {
     IDT.load();
 }
 
+/// Handler for breakpoint exception
 extern "x86-interrupt" fn breakpoint_handler(stack_frame: InterruptStackFrame) {
     println!("EXCEPTION: BREAPOINT\n{:#?}", stack_frame);
 }
 
+/// Handler for double fault exception
 extern "x86-interrupt" fn double_fault_handler(
     stack_frame: InterruptStackFrame,
     _error_code: u64,
@@ -73,6 +75,7 @@ extern "x86-interrupt" fn page_fault_handler(
     println!("{stack_frame:#?}");
 }
 
+/// Handler for timer interrupt
 extern "x86-interrupt" fn timer_interrupt_handler(_stack_frame: InterruptStackFrame) {
     crate::print!(".");
 
@@ -82,6 +85,7 @@ extern "x86-interrupt" fn timer_interrupt_handler(_stack_frame: InterruptStackFr
     };
 }
 
+/// Handler for keyboard interrupt
 extern "x86-interrupt" fn keyboard_interrupt_handler(_stack_frame: InterruptStackFrame) {
     use crate::print;
     use lazy_static::lazy_static;
