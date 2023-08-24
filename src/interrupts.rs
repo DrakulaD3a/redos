@@ -1,4 +1,5 @@
 use crate::gdt;
+use crate::hlt_loop;
 use crate::println;
 use pic8259::ChainedPics;
 use spin::Mutex;
@@ -73,6 +74,7 @@ extern "x86-interrupt" fn page_fault_handler(
     println!("Accessed address: {:?}", Cr2::read());
     println!("Error code: {:?}", error_code);
     println!("{stack_frame:#?}");
+    hlt_loop();
 }
 
 /// Handler for timer interrupt
