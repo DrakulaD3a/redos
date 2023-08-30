@@ -4,6 +4,7 @@
 #![test_runner(crate::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 #![feature(abi_x86_interrupt)]
+#![feature(type_alias_impl_trait)]
 
 /// Handles the faults
 pub mod gdt;

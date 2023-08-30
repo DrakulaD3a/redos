@@ -10,27 +10,9 @@ use rudos::println;
 entry_point!(kernel_main);
 
 /// This is the typechecked entry point of our system
-fn kernel_main(boot_info: &'static BootInfo) -> ! {
-    use rudos::memory;
-    use x86_64::{structures::paging::Translate, VirtAddr};
-
+fn kernel_main(_boot_info: &'static BootInfo) -> ! {
     println!("Hello World{}", "!");
     rudos::init();
-
-    let phys_mem_offset = VirtAddr::new(boot_info.physical_memory_offset);
-    let mapper = unsafe { memory::init(phys_mem_offset) };
-    let addresses = [
-        0xb8000,
-        0x201008,
-        0x0100_0020_1a10,
-        boot_info.physical_memory_offset,
-    ];
-
-    for &address in &addresses {
-        let virt = VirtAddr::new(address);
-        let phys = mapper.translate_addr(virt);
-        println!("{:?} -> {:?}", virt, phys);
-    }
 
     // We need to manually call this because we are in no_main project
     #[cfg(test)]
