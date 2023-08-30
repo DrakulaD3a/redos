@@ -5,12 +5,18 @@
 #![reexport_test_harness_main = "test_main"]
 #![feature(abi_x86_interrupt)]
 
+/// Handles the faults
 pub mod gdt;
+/// Handles the hardware interrupts
 pub mod interrupts;
+/// Helper module for memory management
 pub mod memory;
+/// Handles printing to the serial console
 pub mod serial;
+/// Handles printing to the VGA buffer
 pub mod vga_buffer;
 
+/// All tests should implement this trait so we can run them
 pub trait Testable {
     fn run(&self);
 }

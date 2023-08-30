@@ -3,6 +3,7 @@ use spin::Mutex;
 use uart_16550::SerialPort;
 
 lazy_static! {
+    /// Initializes the port and sets the port 0x3F8
     pub static ref SERIAL1: Mutex<SerialPort> = {
         let mut serial_port = unsafe { SerialPort::new(0x3F8) };
         serial_port.init();
@@ -16,10 +17,10 @@ pub fn _print(args: core::fmt::Arguments) {
     use x86_64::instructions::interrupts;
 
     interrupts::without_interrupts(|| {
-        SERIAL1
-            .lock()
-            .write_fmt(args)
-            .expect("Printing to the serial failed");
+        assert!(
+            SERIAL1.lock().write_fmt(args).is_ok(),
+            "Printing to the serial failed!"
+        );
     });
 }
 

@@ -7,6 +7,7 @@ use x86_64::{
     VirtAddr,
 };
 
+/// Index of the double fault ist
 pub const DOUBLE_FAULT_IST_INDEX: u16 = 0;
 
 lazy_static! {

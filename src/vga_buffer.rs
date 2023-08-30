@@ -1,3 +1,4 @@
+/// A helper struct with color codes defined
 #[allow(dead_code)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(u8)]
@@ -129,6 +130,7 @@ impl fmt::Write for Writer {
 
 use spin::Mutex;
 lazy_static::lazy_static! {
+    /// Sets up the writer with red color on black background at the VGA buffer address
     pub static ref WRITER: Mutex<Writer> = Mutex::new(Writer {
         column_position: 0,
         color_code: ColorCode::new(Color::Red, Color::Black),
@@ -155,8 +157,11 @@ pub fn _print(args: fmt::Arguments) {
     use x86_64::instructions::interrupts;
 
     interrupts::without_interrupts(|| {
-        // FIX: Don't use unwrap
-        WRITER.lock().write_fmt(args).unwrap();
+        // Panic on error, else continue
+        assert!(
+            WRITER.lock().write_fmt(args).is_ok(),
+            "Error writing to screen"
+        );
     });
 }
 

@@ -6,9 +6,12 @@ use spin::Mutex;
 use x86_64::structures::idt::PageFaultErrorCode;
 use x86_64::structures::idt::{InterruptDescriptorTable, InterruptStackFrame};
 
+/// Offset of the first PIC
 pub const PIC_1_OFFSET: u8 = 32;
+/// Offset of the last PIC
 pub const PIC_2_OFFSET: u8 = PIC_1_OFFSET + 1;
 
+/// Represents the primary/secondary PIC layout
 pub static PICS: Mutex<ChainedPics> =
     Mutex::new(unsafe { ChainedPics::new(PIC_1_OFFSET, PIC_2_OFFSET) });
 
@@ -27,6 +30,7 @@ lazy_static::lazy_static! {
     };
 }
 
+/// Represents the index of interrupt
 #[derive(Debug, Clone, Copy)]
 #[repr(u8)]
 pub enum InterruptIndex {
@@ -46,6 +50,7 @@ impl InterruptIndex {
     }
 }
 
+/// Loads the `InterruptDescriptorTable`
 pub fn init_idt() {
     IDT.load();
 }

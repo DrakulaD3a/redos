@@ -3,7 +3,7 @@ use x86_64::{
     VirtAddr,
 };
 
-/// Initializes a new `OffsetPageTable`.
+/// Initializes a new [OffsetPageTable](https://docs.rs/x86_64/latest/x86_64/structures/paging/mapper/struct.OffsetPageTable.html).
 ///
 /// # Safety
 ///
@@ -17,14 +17,6 @@ pub unsafe fn init(physical_memory_offset: VirtAddr) -> OffsetPageTable<'static>
     OffsetPageTable::new(level4_table, physical_memory_offset)
 }
 
-/// Returns a mutable reference to the active level 4 table.
-///
-/// # Safety
-///
-/// The caller must guarantee that the complete physical memory is
-/// mapped to virtual memory at the `physical_memory_offset`. This
-/// function can only be called once to avoid aliasing
-/// &mut references (which results in UB).
 #[must_use]
 unsafe fn active_level4_table(physical_memory_offset: VirtAddr) -> &'static mut PageTable {
     use x86_64::registers::control::Cr3;
