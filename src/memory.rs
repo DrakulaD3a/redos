@@ -14,8 +14,12 @@ use x86_64::{
 /// once to avoid aliasing &mut references (which results in UB).
 #[must_use]
 pub unsafe fn init(physical_memory_offset: VirtAddr) -> OffsetPageTable<'static> {
-    let level4_table = active_level4_table(physical_memory_offset);
-    OffsetPageTable::new(level4_table, physical_memory_offset)
+    unsafe {
+        OffsetPageTable::new(
+            active_level4_table(physical_memory_offset),
+            physical_memory_offset,
+        )
+    }
 }
 
 #[must_use]
@@ -28,8 +32,7 @@ unsafe fn active_level4_table(physical_memory_offset: VirtAddr) -> &'static mut 
     let virt = physical_memory_offset + phys.as_u64();
     let page_table_ptr: *mut PageTable = virt.as_mut_ptr();
 
-    // unsafe
-    &mut *page_table_ptr
+    unsafe { &mut *page_table_ptr }
 }
 
 /// A temporary type so we can make a field in `BootInfoFrameAllocator` without known type

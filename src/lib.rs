@@ -5,6 +5,7 @@
 #![reexport_test_harness_main = "test_main"]
 #![feature(abi_x86_interrupt)]
 #![feature(type_alias_impl_trait)]
+#![deny(unsafe_op_in_unsafe_fn)]
 
 /// Handles the faults
 pub mod gdt;
